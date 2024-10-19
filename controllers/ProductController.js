@@ -14,6 +14,7 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
         category:req.body.category,
         image:req.body.image
         });
+
         const result= await product.save();
         return res.status(201).json(result);
             });
@@ -21,15 +22,20 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
 
     const getProductById = asyncHandler(async(req,res)=>{
         const product= await Product.findById(req.params.id);
+
         return !product?res.status(404).json({message:"This Product Not Found"}) :
                         res.status(200).json(product);
             });
 
+
     const getAllProducts=asyncHandler(async (req,res)=>{
             const products= await Product.find();
+
             return products.length>0?res.status(200).json(products) :
+
             res.status(404).json({message:"There is No Products Until Now"})
             });
+
 
     const editProduct = asyncHandler(async (req, res) => {
                 const { error } = validateEditProduct(req.body);
@@ -53,15 +59,17 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
                 return res.status(200).json(updatedProduct);
             });
             
-    const deleteProduct= asyncHandler(async (req,res)=>{
-            const product= await  Product.findById(req.params.id);
-            if(product){
-                Product.findByIdAndDelete(req.params.id);
-                return res.status(200).json({Message:"Product Deleted Successfully"}); 
-            }
-            return res.status(404).json({Message:"Product Not Found"}); 
-
-            }); 
+            const deleteProduct = asyncHandler(async (req, res) => {
+                const product = await Product.findById(req.params.id); 
+            
+                if (product) {
+                    await Product.findByIdAndDelete(req.params.id);
+                    return res.status(200).json({ Message: "Product Deleted Successfully" }); 
+                }
+            
+                return res.status(404).json({ Message: "Product Not Found" }); 
+            });
+            
 
 const searchByName = asyncHandler(async (req, res) => {
     const { name } = req.query;
