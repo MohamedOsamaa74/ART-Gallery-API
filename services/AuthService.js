@@ -12,5 +12,9 @@ class AuthService {
         const hashedPassword = await bcrypt.hash(password, 10);
         return hashedPassword;
     }
+
+    static async comparePasswords(password, hashedPassword) {
+        return bcrypt.compare(password, hashedPassword);
+    }
 }
 module.exports = AuthService;
