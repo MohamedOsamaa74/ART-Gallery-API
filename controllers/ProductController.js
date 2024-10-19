@@ -7,6 +7,7 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
         if(error){
         return res.status(400).json({Message:error.details[0].message}); 
         }
+
         const product = new Product({
         name:req.body.name,
         description:req.body.description,
@@ -14,7 +15,6 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
         category:req.body.category,
         image:req.body.image
         });
-
         const result= await product.save();
         return res.status(201).json(result);
             });
@@ -35,6 +35,8 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
 
             res.status(404).json({message:"There is No Products Until Now"})
             });
+
+
 
 
     const editProduct = asyncHandler(async (req, res) => {
@@ -59,17 +61,15 @@ const {validateCreateProduct, validateEditProduct}= require('../validations/prod
                 return res.status(200).json(updatedProduct);
             });
             
-            const deleteProduct = asyncHandler(async (req, res) => {
-                const product = await Product.findById(req.params.id); 
-            
-                if (product) {
-                    await Product.findByIdAndDelete(req.params.id);
-                    return res.status(200).json({ Message: "Product Deleted Successfully" }); 
-                }
-            
-                return res.status(404).json({ Message: "Product Not Found" }); 
-            });
-            
+    const deleteProduct= asyncHandler(async (req,res)=>{
+            const product= await  Product.findById(req.params.id);
+            if(product){
+                Product.findByIdAndDelete(req.params.id);
+                return res.status(200).json({Message:"Product Deleted Successfully"}); 
+            }
+            return res.status(404).json({Message:"Product Not Found"}); 
+
+            }); 
 
 const searchByName = asyncHandler(async (req, res) => {
     const { name } = req.query;
