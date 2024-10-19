@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
  async function ConnectDB() {
-    mongoose.connect('mongodb://localhost:27017/ART-Gallery-DB')
+    mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log('Error: ', err));
 }
