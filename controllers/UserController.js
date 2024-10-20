@@ -2,7 +2,6 @@ const user = require('../models/User');
 
 const getById = async (req, res) =>{
     try{
-        console.log(req.params);
         const userId = req.params.id;
         const userById = await user.User.findById(userId).select('-password');
         res.status(200).json(userById);
@@ -14,6 +13,10 @@ const getById = async (req, res) =>{
 
 const getAll = async (req, res) =>{
     try{
+        const role = req.user.role;
+        if(role !== 'admin'){
+            return res.status(403).json({message: 'Unauthorized'});
+        }
         const users = await user.User.find().select('-password');
         res.status(200).json(users);
     }
@@ -25,7 +28,8 @@ const getAll = async (req, res) =>{
 const updateUser = async (req, res) => {
     try {
         const userId = req.params.id;
-        const requestingUserId = req.user.id; // Assuming the user ID is stored in req.user.id
+        const requestingUserId = req.user.id;
+        const role = req.user.role;
 
         if (!req.body) {
             return res.status(400).json({ message: "Data cannot be empty" });
@@ -33,8 +37,8 @@ const updateUser = async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: "Invalid User Id" });
         }
-        if (userId !== requestingUserId) {
-            return res.status(403).json({ message: "Unauthorized: You can only update your own profile" });
+        if (userId !== requestingUserId && role !== 'admin') {
+            return res.status(403).json({ message: "Unauthorized" });
         }
 
         const userById = await user.User.findById(userId);
@@ -49,8 +53,36 @@ const updateUser = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) =>{
+    try{
+        const userId = req.params.id;
+        const requestingUserId = req.user.id;
+        const role = req.user.role;
+
+        if (!userId) {
+            return res.status(400).json({ message: "Invalid User Id" });
+        }
+        
+        if (userId !== requestingUserId && role !== 'admin') {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+
+        const userById = await user.User.findById(userId);
+        if (!userById) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        await user.User.findByIdAndDelete(userId);
+        res.status(200).json({ message: "User deleted successfully" });
+    }
+    catch(err){
+        res.status(400).json({error: err.message});
+    }
+}
+
 module.exports = {
     getById,
     getAll,
-    updateUser
+    updateUser,
+    deleteUser
 }
