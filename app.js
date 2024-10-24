@@ -2,7 +2,7 @@ const express = require('express');
 const ConnectDB = require('./config/db');
 const {notFound, errorHandler} = require('./middlewares/ErrorHandler');
 const productRouter=require('./routers/ProductRouter');
-
+const cors = require('cors');
 const cartRouter=require('./routers/CartRouter');
 const AuthRouter = require('./routers/AuthRouter');
 const UserRouter = require('./routers/UserRouter');

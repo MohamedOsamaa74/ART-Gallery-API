@@ -36,7 +36,7 @@ const UserSchema= new mongoose.Schema({
         required:false,
         maxlength:11,
         minlength:11,
-        unique: true,
+        unique: false,
         match: [/^01[0,1,2,5]\d{8}$/, 'Please enter a valid phone number']
     },
     address:{
