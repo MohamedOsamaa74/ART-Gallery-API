@@ -6,6 +6,7 @@ const productRouter=require('./routers/ProductRouter');
 const cartRouter=require('./routers/CartRouter');
 const AuthRouter = require('./routers/AuthRouter');
 const UserRouter = require('./routers/UserRouter');
+const OrderRouter = require('./routers/OrderRouter');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -25,7 +26,7 @@ app.use('/api/auth', AuthRouter);
 app.use('/api/user', UserRouter);
 app.use('/api/product',productRouter);
 app.use('/api/cart',cartRouter);
-
+app.use('/api/order',OrderRouter)
 app.use(notFound);
 app.use(errorHandler);
 
